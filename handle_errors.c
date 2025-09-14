@@ -16,25 +16,26 @@
 void	free_all(t_philo *p)
 {
 	int		i;
-	t_share	*s;
+	t_rules	*r;
 
-	s = p->share;
-	if (!p || !s)
+	r = p->rules;
+	if (!p || !r)
 		return ;
-	pthread_mutex_destroy(&s->print);
-	pthread_mutex_destroy(&s->meal_mtx);
-	pthread_mutex_destroy(&s->mtx_died);
-	if (s->forks)
+	pthread_mutex_destroy(&r->print);
+	pthread_mutex_destroy(&r->meal_mtx);
+	pthread_mutex_destroy(&r->mtx_alive);
+	pthread_mutex_destroy(&r->mtx_done);
+	if (r->forks)
 	{
 		i = 0;
-		while (i < s->philos)
+		while (i < r->n)
 		{
-			pthread_mutex_destroy(&s->forks[i]);
+			pthread_mutex_destroy(&r->forks[i]);
 			i++;
 		}
-		free(s->forks);
+		free(r->forks);
 	}
-	free(s);
+	free(r);
 	free(p);
 }
 

@@ -31,32 +31,32 @@
 
 typedef pthread_mutex_t	t_mtx;
 
-typedef struct s_share
+typedef struct s_rules
 {
-	int			philos;
-	int			time_to_die;
-	int			time_to_eat;
-	long long	start_eating;
-	int			time_to_sleep;
-	int			must_eat;
-	int			died;
-	long long	starting_time;
+	int			n;
+	int			t_die;
+	int			t_eat;
+	int			t_sleep;
+	int			eat_goal;
+	long long	start_ms;
+	int			alive;
+	int			done_count;
 	t_mtx		print;
-	t_mtx		meal_mtx;
 	t_mtx		*forks;
-	t_mtx		mtx_died;
-}	t_share;
+	t_mtx		meal_mtx;
+	t_mtx		mtx_alive;
+	t_mtx		mtx_done;
+}	t_rules;
 
 typedef struct s_philo
 {
 	int			id;
-	int			meals_count;
-	int			left_fork;
-	int			right_fork;
-	long long	last_meal;
-	t_mtx		*meal_mtx;
+	int			left;
+	int			right;
+	long long	last_meal_ms;
+	int			meals_eaten;
+	t_rules		*rules;
 	pthread_t	thread_id;
-	t_share		*share;
 }	t_philo;
 
 int			ft_atoi(const char *str);
@@ -67,17 +67,16 @@ void		*routine(void *arg);
 void		*safe_malloc(size_t size);
 void		error_exit(char *error);
 void		start_simulation(t_philo *p);
-void		sleeper(size_t milliseconds);
 int			parsing(char **av);
 t_philo		*philo(t_philo *p, char **av);
 void		data_init(t_philo *p);
-long long	get_time(void);
-int			check_for_die(t_philo *p);
-int			check_death(t_philo *s);
+long long	now_ms(void);
+long long	since_start_ms(t_rules *r);
+void		smart_usleep(long long ms, t_rules *r);
+void		*monitor_routine(void *arg);
 void		print_action(t_philo *s, char *msg);
-void		think(t_philo *s);
 int			take_forks(t_philo *s);
-int			eat(t_philo *s, int *meals);
 void		drop_forks(t_philo *s);
-void		sleep_philo(t_philo *s);
+int			check_alive(t_rules *rules);
+void		set_alive(t_rules *rules, int value);
 #endif

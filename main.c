@@ -16,8 +16,9 @@
 
 int	main(int ac, char **av)
 {
-	t_philo	*p;
-	int		i;
+	t_philo		*p;
+	pthread_t	monitor_thread;
+	int			i;
 
 	i = 0;
 	p = NULL;
@@ -27,18 +28,14 @@ int	main(int ac, char **av)
 		return (0);
 	p = philo(p, av);
 	data_init(p);
+	if (pthread_create(&monitor_thread, NULL, &monitor_routine, p) != 0)
+		return (error_exit("Failed to create monitor thread"), 0);
 	start_simulation(p);
-	while (1)
+	pthread_join(monitor_thread, NULL);
+	while (i < p->rules->n)
 	{
-		if (!check_for_die(p))
-		{
-			while (i < p->share->philos)
-			{
-				pthread_join(p[i].thread_id, NULL);
-				i++;
-			}
-			return (free_all(p), 0);
-		}
+		pthread_join(p[i].thread_id, NULL);
+		i++;
 	}
 	return (free_all(p), 0);
 }

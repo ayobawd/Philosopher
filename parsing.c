@@ -23,7 +23,7 @@ int	check(char **av, int ac)
 	if (ft_atoi(av[1]) == 1)
 	{
 		printf("0 1 has taken a fork\n");
-		sleeper(ft_atoi(av[2]));
+		usleep(ft_atoi(av[2]) * 1000);
 		printf("%d 1 died\n", (ft_atoi(av[2])));
 		return (0);
 	}
