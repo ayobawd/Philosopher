@@ -6,10 +6,9 @@
 /*   By: ayal-awa <ayal-awa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 17:39:12 by ayal-awa          #+#    #+#             */
-/*   Updated: 2025/09/05 17:39:12 by ayal-awa         ###   ########.fr       */
+/*   Updated: 2025/09/14 14:59:47 by ayal-awa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "philo.h"
 
@@ -24,8 +23,7 @@ int	check_philosopher_death(t_philo *philos, int i)
 	{
 		set_alive(philos->rules, 0);
 		pthread_mutex_lock(&philos->rules->print);
-		printf("%lld %d died\n", since_start_ms(philos->rules),
-			philos[i].id);
+		printf("%lld %d died\n", since_start_ms(philos->rules), philos[i].id);
 		pthread_mutex_unlock(&philos->rules->print);
 		return (1);
 	}
@@ -42,7 +40,7 @@ int	check_meal_goal(t_philo *philos)
 	while (i < philos->rules->n)
 	{
 		pthread_mutex_lock(&philos->rules->meal_mtx);
-		if (philos->rules->eat_goal != -1 
+		if (philos->rules->eat_goal != -1
 			&& philos[i].meals_eaten < philos->rules->eat_goal)
 			all_done = 0;
 		pthread_mutex_unlock(&philos->rules->meal_mtx);
