@@ -20,6 +20,19 @@ void	drop_forks(t_philo *s)
 	pthread_mutex_unlock(&s->rules->forks[s->right]);
 }
 
+int	philo_eat(t_philo *s)
+{
+	pthread_mutex_lock(&s->rules->meal_mtx);
+	s->last_meal_ms = now_ms();
+	pthread_mutex_unlock(&s->rules->meal_mtx);
+	print_action(s, "is eating");
+	smart_usleep(s->rules->t_eat, s->rules);
+	pthread_mutex_lock(&s->rules->meal_mtx);
+	s->meals_eaten++;
+	pthread_mutex_unlock(&s->rules->meal_mtx);
+	return (1);
+}
+
 void	*routine(void *arg)
 {
 	t_philo	*s;
@@ -30,12 +43,7 @@ void	*routine(void *arg)
 		print_action(s, "is thinking");
 		if (!take_forks(s))
 			return (NULL);
-		pthread_mutex_lock(&s->rules->meal_mtx);
-		s->last_meal_ms = now_ms();
-		pthread_mutex_unlock(&s->rules->meal_mtx);
-		print_action(s, "is eating");
-		smart_usleep(s->rules->t_eat, s->rules);
-		s->meals_eaten++;
+		philo_eat(s);
 		drop_forks(s);
 		if (!check_alive(s->rules))
 			return (NULL);

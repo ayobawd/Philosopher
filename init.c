@@ -13,6 +13,21 @@
 
 #include "philo.h"
 
+void	init_rules(t_rules *rules, char **av)
+{
+	rules->n = ft_atoi(av[1]);
+	rules->alive = 1;
+	rules->done_count = 0;
+	rules->t_die = ft_atoi(av[2]);
+	rules->t_eat = ft_atoi(av[3]);
+	rules->t_sleep = ft_atoi(av[4]);
+	rules->start_ms = now_ms();
+	if (av[5])
+		rules->eat_goal = ft_atoi(av[5]);
+	else
+		rules->eat_goal = -1;
+}
+
 t_philo	*philo(t_philo *p, char **av)
 {
 	int	philos_num;
@@ -22,17 +37,7 @@ t_philo	*philo(t_philo *p, char **av)
 	philos_num = ft_atoi(av[1]);
 	p = safe_malloc(sizeof(t_philo) * philos_num);
 	p->rules = safe_malloc(sizeof(t_rules));
-	p->rules->n = philos_num;
-	p->rules->alive = 1;
-	p->rules->done_count = 0;
-	p->rules->t_die = ft_atoi(av[2]);
-	p->rules->t_eat = ft_atoi(av[3]);
-	p->rules->t_sleep = ft_atoi(av[4]);
-	p->rules->start_ms = now_ms();
-	if (av[5])
-		p->rules->eat_goal = ft_atoi(av[5]);
-	else
-		p->rules->eat_goal = -1;
+	init_rules(p->rules, av);
 	while (i < philos_num)
 	{
 		p[i].rules = p->rules;

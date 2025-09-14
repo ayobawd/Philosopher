@@ -77,6 +77,13 @@ void		*monitor_routine(void *arg);
 void		print_action(t_philo *s, char *msg);
 int			take_forks(t_philo *s);
 void		drop_forks(t_philo *s);
+void		drop_forks(t_philo *s);
 int			check_alive(t_rules *rules);
 void		set_alive(t_rules *rules, int value);
+int			check_philosopher_death(t_philo *philos, int i);
+int			check_meal_goal(t_philo *philos);
+void		init_rules(t_rules *rules, char **av);
+int			handle_single_philo(char **av);
+int			validate_arguments(char **av, int ac);
+int			philo_eat(t_philo *s);
 #endif
