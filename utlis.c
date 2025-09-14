@@ -38,27 +38,10 @@ int	ft_atoi(const char *str)
 	return ((int)(result * sign));
 }
 
-long long	get_time(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-}
-
 int	ft_isdigit(int c)
 {
 	if (c >= '0' && c <= '9')
 		return (1);
 	else
 		return (0);
-}
-
-void	sleeper(size_t milliseconds)
-{
-	size_t	start_time;
-
-	start_time = get_time();
-	while (get_time() - start_time < milliseconds)
-		usleep(50);
 }

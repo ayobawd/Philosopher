@@ -14,19 +14,20 @@
 
 #include "philo.h"
 
-int	check(char **av, int ac)
+int	handle_single_philo(char **av)
+{
+	printf("0 1 has taken a fork\n");
+	usleep(ft_atoi(av[2]) * 1000);
+	printf("%d 1 died\n", (ft_atoi(av[2])));
+	return (0);
+}
+
+int	validate_arguments(char **av, int ac)
 {
 	int	j;
 	int	i;
 
 	j = 1;
-	if (ft_atoi(av[1]) == 1)
-	{
-		printf("0 1 has taken a fork\n");
-		sleeper(ft_atoi(av[2]));
-		printf("%d 1 died\n", (ft_atoi(av[2])));
-		return (0);
-	}
 	while (ac > j)
 	{
 		i = 0;
@@ -41,6 +42,13 @@ int	check(char **av, int ac)
 		j++;
 	}
 	return (1);
+}
+
+int	check(char **av, int ac)
+{
+	if (ft_atoi(av[1]) == 1)
+		return (handle_single_philo(av));
+	return (validate_arguments(av, ac));
 }
 
 int	parsing(char **av)

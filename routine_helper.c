@@ -16,37 +16,39 @@
 
 void	drop_forks(t_philo *s)
 {
-	pthread_mutex_unlock(&s->share->forks[s->left_fork]);
-	pthread_mutex_unlock(&s->share->forks[s->right_fork]);
+	pthread_mutex_unlock(&s->rules->forks[s->left]);
+	pthread_mutex_unlock(&s->rules->forks[s->right]);
 }
 
-void	sleep_philo(t_philo *s)
+int	philo_eat(t_philo *s)
 {
-	print_action(s, "is sleeping");
-	sleeper(s->share->time_to_sleep);
+	pthread_mutex_lock(&s->rules->meal_mtx);
+	s->last_meal_ms = now_ms();
+	pthread_mutex_unlock(&s->rules->meal_mtx);
+	print_action(s, "is eating");
+	smart_usleep(s->rules->t_eat, s->rules);
+	pthread_mutex_lock(&s->rules->meal_mtx);
+	s->meals_eaten++;
+	pthread_mutex_unlock(&s->rules->meal_mtx);
+	return (1);
 }
 
 void	*routine(void *arg)
 {
 	t_philo	*s;
-	int		meals;
 
 	s = (t_philo *)arg;
-	meals = s->share->must_eat;
-	while (meals != 0)
+	while (check_alive(s->rules))
 	{
-		if (check_death(s))
-			return (NULL);
-		think(s);
+		print_action(s, "is thinking");
 		if (!take_forks(s))
 			return (NULL);
-		if (!eat(s, &meals))
-			return (NULL);
+		philo_eat(s);
 		drop_forks(s);
-		if (check_death(s))
+		if (!check_alive(s->rules))
 			return (NULL);
-		sleep_philo(s);
+		print_action(s, "is sleeping");
+		smart_usleep(s->rules->t_sleep, s->rules);
 	}
-	s->share->must_eat = meals;
 	return (NULL);
 }
