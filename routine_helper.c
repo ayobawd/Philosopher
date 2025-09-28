@@ -18,7 +18,7 @@ void	drop_forks(t_philo *s)
 	pthread_mutex_unlock(&s->rules->forks[s->right]);
 }
 
-int	philo_eat(t_philo *s)
+void	philo_eat(t_philo *s)
 {
 	pthread_mutex_lock(&s->rules->meal_mtx);
 	s->last_meal_ms = now_ms();
@@ -28,7 +28,6 @@ int	philo_eat(t_philo *s)
 	pthread_mutex_lock(&s->rules->meal_mtx);
 	s->meals_eaten++;
 	pthread_mutex_unlock(&s->rules->meal_mtx);
-	return (1);
 }
 
 void	*routine(void *arg)
@@ -46,6 +45,7 @@ void	*routine(void *arg)
 		if (!check_alive(s->rules))
 			return (NULL);
 		print_action(s, "is sleeping");
+		usleep(1000);
 		smart_usleep(s->rules->t_sleep, s->rules);
 	}
 	return (NULL);

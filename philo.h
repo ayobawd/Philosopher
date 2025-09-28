@@ -84,5 +84,5 @@ int						check_meal_goal(t_philo *philos);
 void					init_rules(t_rules *rules, char **av);
 int						handle_single_philo(char **av);
 int						validate_arguments(char **av, int ac);
-int						philo_eat(t_philo *s);
+void						philo_eat(t_philo *s);
 #endif
